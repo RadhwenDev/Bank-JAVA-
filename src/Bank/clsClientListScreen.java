@@ -18,6 +18,10 @@ public class clsClientListScreen extends clsScreen{
     }
 	
 	public static void showClientsList() {
+		if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pListClients)) {
+            clsUser.drawAccessDeniedMessage();
+			return;
+		}
         ArrayList<clsBankClient> clients = clsBankClient.getClientsList();
 
         String title = "\t  Client List Screen";

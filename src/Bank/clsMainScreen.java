@@ -40,15 +40,15 @@ public class clsMainScreen extends clsScreen{
     }
 
     private static void showTransactionsMenu() {
-        System.out.println("\nTransactions Menu Will be here...\n");
+    	clsTransactionsScreen.showTransactionsMenu();
     }
 
     private static void showManageUsersMenu() {
-        System.out.println("\nUsers Menu Will be here...\n");
+    	clsManageUsersScreen.showManageUsersMenu();
     }
 
-    private static void showEndScreen() {
-        System.out.println("\nProgram Ends :-) Bye Bye!");
+    private static void Logout() {
+    	clsUser.CurrentUser = clsUser.find("", "");
     }
     
     private static void performMainMenuOption(enMainMenueOptions MainMenueOption) {
@@ -97,7 +97,7 @@ public class clsMainScreen extends clsScreen{
 
         case enMainMenueOptions.eExit:
         	clearScreen();
-            showEndScreen();
+            Logout();
             break;
         }
     }

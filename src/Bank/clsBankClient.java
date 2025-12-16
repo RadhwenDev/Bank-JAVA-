@@ -304,4 +304,23 @@ public class clsBankClient extends clsPerson{
         return total;
     }
 
+    public void Deposit(double Amount)
+    {
+        AccountBalance += Amount;
+        Save();
+    }
+
+    public boolean withdraw(double amount) {
+        if (amount <= 0) {
+            return false;
+        }
+
+        if (amount > this.AccountBalance) {
+            return false; 
+        }
+
+        this.AccountBalance -= amount;
+        this.Save();  
+        return true;
+    }
 }

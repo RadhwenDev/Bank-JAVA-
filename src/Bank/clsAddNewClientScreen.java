@@ -38,6 +38,11 @@ public class clsAddNewClientScreen extends clsScreen{
     }
 	
 	public static void showAddNewClientScreen() {
+		if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pAddNewClient)) {
+            clsUser.drawAccessDeniedMessage();
+			return;
+		}
+		
         drawScreenHeader("\t  Add New Client Screen");
 
         System.out.print("\nPlease Enter Account Number: ");
