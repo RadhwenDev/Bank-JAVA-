@@ -6,11 +6,11 @@ public class clsTransactionsScreen extends clsScreen{
 	
 	private static final Scanner scanner = new Scanner(System.in);
 	
-	private enum enTransactionsMenueOptions {eDeposit, eWithdraw, eShowTotalBalance, eShowMainMenue};
+	private enum enTransactionsMenueOptions {eDeposit, eWithdraw, eShowTotalBalance, eTransfer, eTransferLog, eShowMainMenue};
 	
 	private static short readTransactionsMenuOption() {
-        System.out.print("\t\t\t\t      Choose what do you want to do? [1 to 4]? ");
-        short choice = (short)clsInputValidate.readIntNumberBetween(1, 4, "\t\t\t\t      Enter Number between 1 to 4? ");
+        System.out.print("\t\t\t\t      Choose what do you want to do? [1 to 6]? ");
+        short choice = (short)clsInputValidate.readIntNumberBetween(1, 6, "\t\t\t\t      Enter Number between 1 to 6? ");
         return (short)(choice - 1);
     }
 	
@@ -30,6 +30,16 @@ public class clsTransactionsScreen extends clsScreen{
 
     private static void showTotalBalancesScreen() {
     	clsTotalBalancesScreen.showTotalBalances();
+    }
+    
+    private static void showTransferScreen()
+    {
+        clsTransferScreen.showTransferScreen();
+    }
+    
+    private static void showTransferLogScreen()
+    {
+        clsTransferLogScreen.showTransferLogScreen();
     }
     
     static void performTransactionsMenuOption(enTransactionsMenueOptions TransactionsMenueOption)
@@ -59,7 +69,22 @@ public class clsTransactionsScreen extends clsScreen{
             goBackToTransactionsMenu();
             break;
         }
-
+        
+        case enTransactionsMenueOptions.eTransfer:
+        {
+        	clearScreen();
+            showTransferScreen();
+            goBackToTransactionsMenu();
+            break;
+        }
+        
+        case enTransactionsMenueOptions.eTransferLog:
+        {
+        	clearScreen();
+            showTransferLogScreen();
+            goBackToTransactionsMenu();
+            break;
+        }
 
         case enTransactionsMenueOptions.eShowMainMenue:
         {
@@ -70,12 +95,16 @@ public class clsTransactionsScreen extends clsScreen{
     }
     
     private static void clearScreen() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 50; i++) {
             System.out.println();
         }
     }
     
     public static void showTransactionsMenu() {
+        if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pTranactions)) {
+            clsUser.drawAccessDeniedMessage();
+			return;
+		}
         clearScreen();
         drawScreenHeader("\t  Transactions Screen");
 
@@ -85,7 +114,9 @@ public class clsTransactionsScreen extends clsScreen{
         System.out.println("\t\t\t\t\t\t[1] Deposit.");
         System.out.println("\t\t\t\t\t\t[2] Withdraw.");
         System.out.println("\t\t\t\t\t\t[3] Total Balances.");
-        System.out.println("\t\t\t\t\t\t[4] Main Menu.");
+        System.out.println("\t\t\t\t\t\t[4] Transfer");
+        System.out.println("\t\t\t\t\t\t[5] Transfer Log");
+        System.out.println("\t\t\t\t\t\t[6] Main Menu.");
         System.out.println("\t\t\t\t      ===========================================");
 
         performTransactionsMenuOption(enTransactionsMenueOptions.values()[readTransactionsMenuOption()]);

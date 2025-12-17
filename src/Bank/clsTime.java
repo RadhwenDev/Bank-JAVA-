@@ -78,6 +78,11 @@ public class clsTime {
         );
     }
 	
+	public static String getSystemDateTimeString() {
+	    return java.time.LocalDateTime.now()
+	            .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss"));
+	}
+	
 	public static boolean isValidDate(clsTime Time) {
 	    if (Time.Day < 1 || Time.Day > 31) return false;
 	    if (Time.Month < 1 || Time.Month > 12) return false;

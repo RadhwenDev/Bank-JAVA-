@@ -87,7 +87,7 @@ public class clsManageUsersScreen extends clsScreen{
 
         case enManageUsersMenueOptions.eMainMenue:
         {
-            //do nothing here the main screen will handle it :-) ;
+        	clsMainScreen.showMainMenu();
         }
         }
 
@@ -101,6 +101,10 @@ public class clsManageUsersScreen extends clsScreen{
     
     public static void showManageUsersMenu() {
         clearScreen();
+        if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pManageUsers)) {
+            clsUser.drawAccessDeniedMessage();
+			return;
+		}
         drawScreenHeader("\t Manage Users Screen");
 
         System.out.println("\t\t\t\t      ===========================================");

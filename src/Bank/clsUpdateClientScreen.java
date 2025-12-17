@@ -41,6 +41,11 @@ public class clsUpdateClientScreen extends clsScreen{
     }
 	
 	public static void showUpdateClientScreen() {
+		if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pUpdateClients)) {
+            clsUser.drawAccessDeniedMessage();
+			return;
+		}
+		
         drawScreenHeader("\tUpdate Client Screen");
 
         System.out.print("\nPlease Enter client Account Number: ");

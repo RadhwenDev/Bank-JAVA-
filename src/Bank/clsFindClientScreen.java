@@ -17,6 +17,11 @@ public class clsFindClientScreen extends clsScreen{
     }
 	
 	public static void showFindClientScreen() {
+		if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pFindClient)) {
+            clsUser.drawAccessDeniedMessage();
+			return;
+		}
+		
         drawScreenHeader("\tFind Client Screen");
 
         System.out.print("\nPlease Enter Account Number: ");

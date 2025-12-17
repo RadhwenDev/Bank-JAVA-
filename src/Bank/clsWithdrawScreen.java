@@ -40,6 +40,11 @@ private static final Scanner scanner = new Scanner(System.in);
 
         System.out.print("\nPlease enter Withdraw amount? ");
         double amount = clsInputValidate.readDblNumber();
+        
+        while(amount < 0) {
+        	System.out.print("\nYou cannot enter a negative number\n\nPlease enter deposit amount? ");
+        	amount = clsInputValidate.readDblNumber();
+        }
 
         System.out.print("\nAre you sure you want to perform this transaction? y/n ");
         char answer = scanner.nextLine().trim().toLowerCase().charAt(0);

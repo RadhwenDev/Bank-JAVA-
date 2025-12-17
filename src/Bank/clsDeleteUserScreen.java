@@ -21,10 +21,7 @@ public class clsDeleteUserScreen extends clsScreen{
     }
 	
 	public static void showDeleteUserScreen() {
-		if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pDeleteClient)) {
-            clsUser.drawAccessDeniedMessage();
-			return;
-		}
+
 		
         drawScreenHeader("\tDelete User Screen");
 

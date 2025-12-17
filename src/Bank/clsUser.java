@@ -72,8 +72,8 @@ public class clsUser extends clsPerson{
 
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) { 
-                	clsUser client = ConvertLinetoUserObject(line);
-                	vUser.add(client);
+                	clsUser user = ConvertLinetoUserObject(line);
+                	vUser.add(user);
                 }
             }
         } catch (IOException e) {
@@ -142,7 +142,7 @@ public class clsUser extends clsPerson{
         pFindClient(16),
         pTranactions(32),
         pManageUsers(64),
-        pFullAccess(-1);
+        pShowLogInRegister(128);
 
         private final int value;
         enPermissions(int value) {
@@ -318,11 +318,11 @@ public class clsUser extends clsPerson{
     }
     
     public boolean checkAccessPermission(enPermissions permission) {
-        if (this.permissions == enPermissions.eAll.getValue()) {
+        if (this.Permissions == enPermissions.eAll.getValue()) {
             return true;
         }
 
-        if ((permission.getValue() & this.permissions) == permission.getValue()) {
+        if ((permission.getValue() & this.Permissions) == permission.getValue()) {
             return true;
         } else {
             return false;
@@ -333,5 +333,86 @@ public class clsUser extends clsPerson{
         System.out.println("\t\t\t\t\t______________________________________");
         System.out.println("\n\n\t\t\t\t\t  Access Denied! Contact your Admin.");
         System.out.println("\n\t\t\t\t\t______________________________________\n\n");
+    }
+    
+    private String prepareLoginRecord(String separator) {
+        if (separator == null || separator.isEmpty()) {
+            separator = "#//#";
+        }
+
+        String dateTime = java.time.LocalDateTime.now()
+                .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss"));
+
+        String record = "";
+        record += dateTime + separator;
+        record += this.UserName + separator;
+        record += this.Password + separator;
+        record += this.Permissions;
+
+        return record;
+    }
+
+    private String prepareLoginRecord() {
+        return prepareLoginRecord("#//#");
+    }
+    
+    public void registerLogin() {
+        String dataLine = prepareLoginRecord();
+
+        String fileName = "LoginRegister.txt";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+            writer.write(dataLine);
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Error in entering the file login history: " + e.getMessage());
+        }
+    }
+    
+    public static class LoginRegisterRecord {
+        public String dateTime;
+        public String userName;
+        public String password;
+        public int permissions;
+
+        public LoginRegisterRecord(String dateTime, String userName, String password, int permissions) {
+            this.dateTime = dateTime;
+            this.userName = userName;
+            this.password = password;
+            this.permissions = permissions;
+        }
+    }
+    
+    private static LoginRegisterRecord convertLoginRegisterLineToRecord(String line) {
+        String[] data = line.split("#//#");
+
+        if (data.length < 4)
+            return new LoginRegisterRecord("", "", "", 0);
+
+        return new LoginRegisterRecord(
+            data[0].trim(),
+            data[1].trim(),
+            data[2].trim(),
+            Integer.parseInt(data[3].trim())
+        );
+    }
+    
+    public static ArrayList<LoginRegisterRecord> getLoginRegisterList() {
+        ArrayList<LoginRegisterRecord> records = new ArrayList<>();
+        String fileName = "LoginRegister.txt";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    LoginRegisterRecord record = convertLoginRegisterLineToRecord(line);
+                    records.add(record);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading login log file: " + e.getMessage());
+        }
+
+        return records;
     }
 }

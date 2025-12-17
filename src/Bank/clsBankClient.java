@@ -311,10 +311,6 @@ public class clsBankClient extends clsPerson{
     }
 
     public boolean withdraw(double amount) {
-        if (amount <= 0) {
-            return false;
-        }
-
         if (amount > this.AccountBalance) {
             return false; 
         }
@@ -323,4 +319,100 @@ public class clsBankClient extends clsPerson{
         this.Save();  
         return true;
     }
+    
+
+ public boolean transfer(float amount, clsBankClient destinationClient, String UserName) {
+     if (amount > this.AccountBalance || amount <= 0)
+         return false;  
+
+     this.withdraw(amount);
+     destinationClient.Deposit(amount);
+     registerTransferLog(amount, destinationClient, UserName);
+     
+     return true;
+ }
+ 
+ 
+private String prepareTransferLogRecord(float amount, clsBankClient destinationClient, String userName, String separator) {
+	if (separator == null || separator.isEmpty()) {
+		separator = "#//#";
+	}
+
+	String dateTime = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss"));
+
+	String record = "";
+	record += dateTime + separator;
+	record += this.AccountNumber + separator;
+	record += destinationClient.AccountNumber + separator;
+	record += amount + separator;
+	record += this.AccountBalance + separator;
+	record += destinationClient.AccountBalance + separator;
+	record += userName;
+
+	return record;
+}
+ 
+private String prepareTransferLogRecord(float amount, clsBankClient destinationClient, String userName) {
+    return prepareTransferLogRecord(amount, destinationClient, userName, "#//#");
+} 
+
+private void registerTransferLog(float amount, clsBankClient destinationClient, String userName) {
+    String dataLine = prepareTransferLogRecord(amount, destinationClient, userName);
+
+    String fileName = "C:\\Users\\ASUS\\Desktop\\Bank Java\\Bank\\TransferLog.txt";
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+        writer.write(dataLine);
+        writer.newLine();
+    } catch (IOException e) {
+        System.out.println("Error in writing the file conversion log: " + e.getMessage());
+    }
+}
+
+private static TransferLogRecord convertTransferLogLineToRecord(String line, String separator) {
+    if (separator == null || separator.isEmpty()) {
+        separator = "#//#";
+    }
+
+    String[] data = line.split(separator);
+
+    if (data.length < 7) {
+        return new TransferLogRecord("", "", "", 0.0f, 0.0f, 0.0f, "");
+    }
+
+    return new TransferLogRecord(
+        data[0].trim(), 
+        data[1].trim(), 
+        data[2].trim(),
+        Float.parseFloat(data[3].trim()),
+        Float.parseFloat(data[4].trim()),
+        Float.parseFloat(data[5].trim()),
+        data[6].trim()
+    );
+}
+
+private static TransferLogRecord convertTransferLogLineToRecord(String line) {
+    return convertTransferLogLineToRecord(line, "#//#");
+}
+
+public static ArrayList<TransferLogRecord> getTransfersLogList() {
+    ArrayList<TransferLogRecord> records = new ArrayList<>();
+    String fileName = "C:\\Users\\ASUS\\Desktop\\Bank Java\\Bank\\TransferLog.txt";
+
+    try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            if (!line.trim().isEmpty()) {
+                TransferLogRecord record = convertTransferLogLineToRecord(line);
+                records.add(record);
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error reading the transfer log file: " + e.getMessage());
+    }
+
+    return records;
+}
+
+
 }

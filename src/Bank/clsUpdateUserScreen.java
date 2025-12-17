@@ -52,15 +52,16 @@ public class clsUpdateUserScreen extends clsScreen{
 
         System.out.println("\nDo you want to give access to :\n");
 
-        permissions += askPermission("Show Client List? y/n? ", clsUser.enPermissions.pListClients.ordinal());
-        permissions += askPermission("Add New Client? y/n? ", clsUser.enPermissions.pAddNewClient.ordinal());
-        permissions += askPermission("Delete Client? y/n? ", clsUser.enPermissions.pDeleteClient.ordinal());
-        permissions += askPermission("Update Client? y/n? ", clsUser.enPermissions.pUpdateClients.ordinal());
-        permissions += askPermission("Find Client? y/n? ", clsUser.enPermissions.pFindClient.ordinal());
-        permissions += askPermission("Transactions? y/n? ", clsUser.enPermissions.pTranactions.ordinal());
-        permissions += askPermission("Manage Users? y/n? ", clsUser.enPermissions.pManageUsers.ordinal());
-
-        return (permissions == 127) ? -1 : permissions;
+        permissions += askPermission("Show Client List? y/n? ", clsUser.enPermissions.pListClients.getValue());
+        permissions += askPermission("Add New Client? y/n? ", clsUser.enPermissions.pAddNewClient.getValue());
+        permissions += askPermission("Delete Client? y/n? ", clsUser.enPermissions.pDeleteClient.getValue());
+        permissions += askPermission("Update Client? y/n? ", clsUser.enPermissions.pUpdateClients.getValue());
+        permissions += askPermission("Find Client? y/n? ", clsUser.enPermissions.pFindClient.getValue());
+        permissions += askPermission("Transactions? y/n? ", clsUser.enPermissions.pTranactions.getValue());
+        permissions += askPermission("Manage Users? y/n? ", clsUser.enPermissions.pManageUsers.getValue());
+        permissions += askPermission("Show Login Register? y/n? ", clsUser.enPermissions.pShowLogInRegister.getValue());
+        
+        return (permissions == 255) ? -1 : permissions;
     }
 	
 	private static int askPermission(String question, int permissionValue) {
@@ -70,10 +71,7 @@ public class clsUpdateUserScreen extends clsScreen{
     }
 	
 	public static void showUpdateUserScreen() {
-		if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pUpdateClients)) {
-            clsUser.drawAccessDeniedMessage();
-			return;
-		}
+
         drawScreenHeader("\tUpdate User Screen");
 
         System.out.print("\nPlease Enter User UserName: ");

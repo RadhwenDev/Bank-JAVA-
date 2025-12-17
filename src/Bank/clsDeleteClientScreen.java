@@ -21,6 +21,11 @@ public class clsDeleteClientScreen extends clsScreen{
     }
 	
 	public static void showDeleteClientScreen() {
+		if (!clsUser.CurrentUser.checkAccessPermission(clsUser.enPermissions.pDeleteClient)) {
+            clsUser.drawAccessDeniedMessage();
+			return;
+		}
+		
         drawScreenHeader("\tDelete Client Screen");
 
         System.out.print("\nPlease Enter Account Number: ");
